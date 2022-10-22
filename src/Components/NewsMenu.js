@@ -17,7 +17,7 @@ import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
 import {useNavigate} from "react-router-dom";
 
-const pages = ['News', 'Sport', 'Entertainment', 'Business', 'Politic', 'Science', 'Technology'];
+const pages = ['News', 'Sport', 'Entertainment', 'Business', 'Health', 'Science', 'Technology'];
 const settings = ['Profile', 'Logout'];
 
 const Search = styled('div')(({theme}) => ({

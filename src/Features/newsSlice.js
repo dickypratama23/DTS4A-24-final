@@ -1,20 +1,46 @@
 import {createSlice, createAsyncThunk} from "@reduxjs/toolkit";
-import inshortNewsApiInstance from "../Apis/InshortNewsApiInstance";
+// import inshortNewsApiInstance from "../Apis/InshortNewsApiInstance";
+import newsApiInstance, {DEFAULT_PARAMS} from "../Apis/newsApiInstance";
 
 const initialStateNews = {
     loading: false,
     error: null,
-    news: []
+    news: [],
+    topNews: []
 }
 
 export const getNews = createAsyncThunk("getNews", async ({category}) => {
-    const responseNewsApi = await inshortNewsApiInstance.get("/news", {
+    // const responseNewsApi = await inshortNewsApiInstance.get("/news", {
+    //     params: {
+    //         category: category
+    //     }
+    // })
+
+    //use news api
+    const responseNewsApi = await newsApiInstance.get("/everything", {
         params: {
-            category: category
+            ...DEFAULT_PARAMS,
+            language: "en",
+            q: category,
+            sortBy: "relevancy",
+            pageSize: 24
         }
     })
 
-    return responseNewsApi.data.data
+    return responseNewsApi.data.articles
+})
+
+export const getTopNews = createAsyncThunk("getTopNews", async ({category}) => {
+    //use news api
+    const responseNewsApi = await newsApiInstance.get("/top-headlines", {
+        params: {
+            ...DEFAULT_PARAMS,
+            category: category,
+            pageSize: 10
+        }
+    })
+
+    return responseNewsApi.data.articles
 })
 
 const newsSlice = createSlice({
@@ -26,9 +52,22 @@ const newsSlice = createSlice({
         },
         [getNews.fulfilled]: (state, action) => {
             state.loading = false
-            state.news = [action.payload]
+            state.news = action.payload
         },
         [getNews.rejected]: (state, action) => {
+            state.loading = false
+            state.error = action.payload
+        },
+
+        //get top news
+        [getTopNews.pending]: (state, action) => {
+            state.loading = true
+        },
+        [getTopNews.fulfilled]: (state, action) => {
+            state.loading = false
+            state.topNews = action.payload
+        },
+        [getTopNews.rejected]: (state, action) => {
             state.loading = false
             state.error = action.payload
         }

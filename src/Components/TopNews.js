@@ -12,7 +12,8 @@ import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 
 import {useDispatch, useSelector} from "react-redux";
-import {getNews} from "../Features/newsSlice";
+import {getTopNews} from "../Features/newsSlice";
+import {showFormattedDate} from "../utils";
 
 const Loading = () => {
     return (
@@ -27,17 +28,17 @@ const Loading = () => {
 
 const TopNews = ({category}) => {
     const [content, setContent] = useState([]);
-    const {loading, news} = useSelector((state) => ({...state.app}))
+    const {loading, topNews} = useSelector((state) => ({...state.app}))
     const dispatch = useDispatch()
 
     useEffect(() => {
-        dispatch(getNews({category}))
+        dispatch(getTopNews({category}))
     }, [category]);
 
     function Item(props) {
         return (
             <>
-                <img src={props.item.imageUrl} alt="" width={"100%"} height={"350"}/>
+                <img src={props.item.urlToImage} alt="" width={"100%"} height={"350"}/>
             </>
         )
     }
@@ -58,7 +59,7 @@ const TopNews = ({category}) => {
                                 <Divider sx={{mt: 1, mb: 1}}/>
                                 <Typography gutterBottom variant="body2" color="text.secondary"
                                             sx={{textAlign: "justify"}}>
-                                    {content.author} - {content.date}
+                                    {content.author} - {showFormattedDate(content.publishedAt)}
                                 </Typography>
                             </Grid>
                             <Grid item xs={8}>
@@ -66,10 +67,10 @@ const TopNews = ({category}) => {
                                     navButtonsAlwaysVisible={true}
                                     NextIcon={<NavigateNextIcon/>}
                                     PrevIcon={<NavigateBeforeIcon/>}
-                                    onChange={(e) => setContent(news[0][e])}
+                                    onChange={(e) => setContent(topNews[e])}
                                 >
                                     {
-                                        news.length > 0 && news[0].filter((item, i) => i < 10).map((news, i) => <Item key={i} item={news}/>)
+                                        topNews.length > 0 ? topNews.map((news, i) => <Item key={i} item={news}/>) : undefined
                                     }
                                 </Carousel>
                             </Grid>

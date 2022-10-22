@@ -1,4 +1,4 @@
-import {useEffect} from 'react';
+import {useEffect, useState} from 'react';
 import {Link} from 'react-router-dom'
 import {
     Box,
@@ -28,8 +28,12 @@ const News = ({category}) => {
     const {loading, news} = useSelector((state) => ({...state.app}))
     const dispatch = useDispatch()
 
+    const [q, setQ] = useState(category);
+
     useEffect(() => {
-        dispatch(getNews({category}))
+        dispatch(getNews({category, q}))
+
+        console.log(news)
     }, [category]);
 
     return (
@@ -39,16 +43,15 @@ const News = ({category}) => {
                     <Box sx={{flexGrow: 1, mt: 3}}>
                         <Grid container spacing={2}>
                             {
-
-                                news.length > 0 && news[0].map((item, i) => {
+                                news.length > 0 ? news.map((item, i) => {
                                     return (
-                                        <Grid key={i} item xs={3}>
+                                        <Grid key={i} item sm={6} md={3}>
                                             <CardActionArea component={Link} to={`${i}?category=${category}`}>
                                                 <CardNews item={item}/>
                                             </CardActionArea>
                                         </Grid>
                                     )
-                                })
+                                }) : undefined
                             }
                         </Grid>
                     </Box>
