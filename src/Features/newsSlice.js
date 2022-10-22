@@ -1,5 +1,4 @@
 import {createSlice, createAsyncThunk} from "@reduxjs/toolkit";
-// import inshortNewsApiInstance from "../Apis/InshortNewsApiInstance";
 import newsApiInstance, {DEFAULT_PARAMS} from "../Apis/newsApiInstance";
 
 const initialStateNews = {
@@ -10,13 +9,6 @@ const initialStateNews = {
 }
 
 export const getNews = createAsyncThunk("getNews", async ({category}) => {
-    // const responseNewsApi = await inshortNewsApiInstance.get("/news", {
-    //     params: {
-    //         category: category
-    //     }
-    // })
-
-    //use news api
     const responseNewsApi = await newsApiInstance.get("/everything", {
         params: {
             ...DEFAULT_PARAMS,
@@ -31,7 +23,6 @@ export const getNews = createAsyncThunk("getNews", async ({category}) => {
 })
 
 export const getTopNews = createAsyncThunk("getTopNews", async ({category}) => {
-    //use news api
     const responseNewsApi = await newsApiInstance.get("/top-headlines", {
         params: {
             ...DEFAULT_PARAMS,
